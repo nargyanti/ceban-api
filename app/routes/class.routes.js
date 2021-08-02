@@ -7,14 +7,14 @@ module.exports = app => {
     // Retrieve all classes
     app.get("/classes", classes.findAll);
 
-    // Retrieve a single Class with customerId
-    app.get("/classes/:customerId", classes.findOne);
+    // Retrieve a single Class with classId
+    app.get("/classes/:classId", classes.findOne);
 
-    // Update a Class with customerId
-    app.put("/classes/:customerId", classes.update);
+    // Update a Class with classId
+    app.put("/classes/:classId", classes.update);
 
-    // Delete a Class with customerId
-    app.delete("/classes/:customerId", classes.delete);
+    // Delete a Class with classId
+    app.delete("/classes/:classId", classes.delete);
 
     // Create a new Class
     app.delete("/classes", classes.deleteAll);

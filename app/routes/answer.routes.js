@@ -7,14 +7,14 @@ module.exports = app => {
     // Retrieve all answers
     app.get("/answers", answers.findAll);
 
-    // Retrieve a single Answer with customerId
-    app.get("/answers/:customerId", answers.findOne);
+    // Retrieve a single Answer with answerId
+    app.get("/answers/:answerId", answers.findOne);
 
-    // Update a Answer with customerId
-    app.put("/answers/:customerId", answers.update);
+    // Update a Answer with answerId
+    app.put("/answers/:answerId", answers.update);
 
-    // Delete a Answer with customerId
-    app.delete("/answers/:customerId", answers.delete);
+    // Delete a Answer with answerId
+    app.delete("/answers/:answerId", answers.delete);
 
     // Create a new Answer
     app.delete("/answers", answers.deleteAll);

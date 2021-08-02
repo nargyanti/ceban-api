@@ -7,14 +7,14 @@ module.exports = app => {
     // Retrieve all assignments
     app.get("/assignments", assignments.findAll);
 
-    // Retrieve a single Assignment with customerId
-    app.get("/assignments/:customerId", assignments.findOne);
+    // Retrieve a single Assignment with assignmentId
+    app.get("/assignments/:assignmentId", assignments.findOne);
 
-    // Update a Assignment with customerId
-    app.put("/assignments/:customerId", assignments.update);
+    // Update a Assignment with assignmentId
+    app.put("/assignments/:assignmentId", assignments.update);
 
-    // Delete a Assignment with customerId
-    app.delete("/assignments/:customerId", assignments.delete);
+    // Delete a Assignment with assignmentId
+    app.delete("/assignments/:assignmentId", assignments.delete);
 
     // Create a new Assignment
     app.delete("/assignments", assignments.deleteAll);

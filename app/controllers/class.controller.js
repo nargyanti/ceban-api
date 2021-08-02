@@ -1,6 +1,6 @@
-const Customer = require("../models/customer.model.js");
+const ClassModel = require("../models/class.model.js");
 
-// Create and Save a new Customer
+// Create and Save a new ClassModel
 exports.create = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -8,54 +8,52 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Customer
-    const customer = new Customer({
-        email: req.body.email,
-        name: req.body.name,
-        active: req.body.active
+    // Create a ClassModel
+    const classModel = new ClassModel({
+        class_name: req.body.class_name,
     });
 
-    // Save Customer in the database
-    Customer.create(customer, (err, data) => {
+    // Save ClassModel in the database
+    ClassModel.create(classModel, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Customer."
+                    err.message || "Some error occurred while creating the ClassModel."
             });
         else res.send(data);
     });
 };
 
-// Retrieve all Customers from the database.
+// Retrieve all Classes from the database.
 exports.findAll = (req, res) => {
-    Customer.getAll((err, data) => {
+    ClassModel.getAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving customers."
+                    err.message || "Some error occurred while retrieving classes."
             });
         else res.send(data);
     });
 };
 
-// Find a single Customer with a customerId
+// Find a single ClassModel with a classId
 exports.findOne = (req, res) => {
-    Customer.findById(req.params.customerId, (err, data) => {
+    ClassModel.findById(req.params.classId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found ClassModel with id ${req.params.classId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Customer with id " + req.params.customerId
+                    message: "Error retrieving ClassModel with id " + req.params.classId
                 });
             }
         } else res.send(data);
     });
 };
 
-// Update a Customer identified by the customerId in the request
+// Update a ClassModel identified by the classId in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -64,18 +62,18 @@ exports.update = (req, res) => {
         });
     }
 
-    Customer.updateById(
-        req.params.customerId,
-        new Customer(req.body),
+    ClassModel.updateById(
+        req.params.classId,
+        new ClassModel(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found Customer with id ${req.params.customerId}.`
+                        message: `Not found ClassModel with id ${req.params.classId}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating Customer with id " + req.params.customerId
+                        message: "Error updating ClassModel with id " + req.params.classId
                     });
                 }
             } else res.send(data);
@@ -83,31 +81,31 @@ exports.update = (req, res) => {
     );
 };
 
-// Delete a Customer with the specified customerId in the request
+// Delete a ClassModel with the specified classId in the request
 exports.delete = (req, res) => {
-    Customer.remove(req.params.customerId, (err, data) => {
+    ClassModel.remove(req.params.classId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found ClassModel with id ${req.params.classId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete Customer with id " + req.params.customerId
+                    message: "Could not delete ClassModel with id " + req.params.classId
                 });
             }
-        } else res.send({ message: `Customer was deleted successfully!` });
+        } else res.send({ message: `ClassModel was deleted successfully!` });
     });
 };
 
-// Delete all Customers from the database.
+// Delete all Classes from the database.
 exports.deleteAll = (req, res) => {
-    Customer.removeAll((err, data) => {
+    ClassModel.removeAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all customers."
+                    err.message || "Some error occurred while removing all classes."
             });
-        else res.send({ message: `All Customers were deleted successfully!` });
+        else res.send({ message: `All Classes were deleted successfully!` });
     });
 };

@@ -1,6 +1,7 @@
-const Customer = require("../models/customer.model.js");
+const SubjectDetail = require("../models/subject_detail.model.js");
+// const Teacher = require("../models/user.model.js");
 
-// Create and Save a new Customer
+// Create and Save a new SubjectDetail
 exports.create = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -8,54 +9,53 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Customer
-    const customer = new Customer({
-        email: req.body.email,
-        name: req.body.name,
-        active: req.body.active
+    // Create a SubjectDetail
+    const subject_detail = new SubjectDetail({
+        subject_id: req.body.subject_id,
+        student_id: req.body.student_id
     });
 
-    // Save Customer in the database
-    Customer.create(customer, (err, data) => {
+    // Save SubjectDetail in the database
+    SubjectDetail.create(subject_detail, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Customer."
+                    err.message || "Some error occurred while creating the SubjectDetail."
             });
         else res.send(data);
     });
 };
 
-// Retrieve all Customers from the database.
+// Retrieve all Subjects from the database.
 exports.findAll = (req, res) => {
-    Customer.getAll((err, data) => {
+    SubjectDetail.getAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving customers."
+                    err.message || "Some error occurred while retrieving subject_details."
             });
         else res.send(data);
     });
 };
 
-// Find a single Customer with a customerId
+// Find a single SubjectDetail with a sdId
 exports.findOne = (req, res) => {
-    Customer.findById(req.params.customerId, (err, data) => {
+    SubjectDetail.findById(req.params.sdId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found SubjectDetail with id ${req.params.sdId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Customer with id " + req.params.customerId
+                    message: "Error retrieving SubjectDetail with id " + req.params.sdId
                 });
             }
         } else res.send(data);
     });
 };
 
-// Update a Customer identified by the customerId in the request
+// Update a SubjectDetail identified by the sdId in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -64,18 +64,18 @@ exports.update = (req, res) => {
         });
     }
 
-    Customer.updateById(
-        req.params.customerId,
-        new Customer(req.body),
+    SubjectDetail.updateById(
+        req.params.sdId,
+        new SubjectDetail(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found Customer with id ${req.params.customerId}.`
+                        message: `Not found SubjectDetail with id ${req.params.sdId}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating Customer with id " + req.params.customerId
+                        message: "Error updating SubjectDetail with id " + req.params.sdId
                     });
                 }
             } else res.send(data);
@@ -83,31 +83,31 @@ exports.update = (req, res) => {
     );
 };
 
-// Delete a Customer with the specified customerId in the request
+// Delete a SubjectDetail with the specified sdId in the request
 exports.delete = (req, res) => {
-    Customer.remove(req.params.customerId, (err, data) => {
+    SubjectDetail.remove(req.params.sdId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found SubjectDetail with id ${req.params.sdId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete Customer with id " + req.params.customerId
+                    message: "Could not delete SubjectDetail with id " + req.params.sdId
                 });
             }
-        } else res.send({ message: `Customer was deleted successfully!` });
+        } else res.send({ message: `SubjectDetail was deleted successfully!` });
     });
 };
 
-// Delete all Customers from the database.
+// Delete all Subjects from the database.
 exports.deleteAll = (req, res) => {
-    Customer.removeAll((err, data) => {
+    SubjectDetail.removeAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all customers."
+                    err.message || "Some error occurred while removing all subject_details."
             });
-        else res.send({ message: `All Customers were deleted successfully!` });
+        else res.send({ message: `All Subjects were deleted successfully!` });
     });
 };

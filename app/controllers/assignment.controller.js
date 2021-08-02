@@ -1,6 +1,6 @@
-const Customer = require("../models/customer.model.js");
+const Assignment = require("../models/assignment.model.js");
 
-// Create and Save a new Customer
+// Create and Save a new Assignment
 exports.create = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -8,54 +8,55 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Customer
-    const customer = new Customer({
-        email: req.body.email,
+    // Create a Assignment
+    const assignment = new Assignment({
+        subject_id: req.body.subject_id,
         name: req.body.name,
-        active: req.body.active
+        question: req.body.question,
+        due_datetime: req.body.due_datetime
     });
 
-    // Save Customer in the database
-    Customer.create(customer, (err, data) => {
+    // Save Assignment in the database
+    Assignment.create(assignment, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Customer."
+                    err.message || "Some error occurred while creating the Assignment."
             });
         else res.send(data);
     });
 };
 
-// Retrieve all Customers from the database.
+// Retrieve all Assignments from the database.
 exports.findAll = (req, res) => {
-    Customer.getAll((err, data) => {
+    Assignment.getAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving customers."
+                    err.message || "Some error occurred while retrieving assignments."
             });
         else res.send(data);
     });
 };
 
-// Find a single Customer with a customerId
+// Find a single Assignment with a assignmentId
 exports.findOne = (req, res) => {
-    Customer.findById(req.params.customerId, (err, data) => {
+    Assignment.findById(req.params.assignmentId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found Assignment with id ${req.params.assignmentId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Customer with id " + req.params.customerId
+                    message: "Error retrieving Assignment with id " + req.params.assignmentId
                 });
             }
         } else res.send(data);
     });
 };
 
-// Update a Customer identified by the customerId in the request
+// Update a Assignment identified by the assignmentId in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -64,18 +65,18 @@ exports.update = (req, res) => {
         });
     }
 
-    Customer.updateById(
-        req.params.customerId,
-        new Customer(req.body),
+    Assignment.updateById(
+        req.params.assignmentId,
+        new Assignment(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found Customer with id ${req.params.customerId}.`
+                        message: `Not found Assignment with id ${req.params.assignmentId}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating Customer with id " + req.params.customerId
+                        message: "Error updating Assignment with id " + req.params.assignmentId
                     });
                 }
             } else res.send(data);
@@ -83,31 +84,31 @@ exports.update = (req, res) => {
     );
 };
 
-// Delete a Customer with the specified customerId in the request
+// Delete a Assignment with the specified assignmentId in the request
 exports.delete = (req, res) => {
-    Customer.remove(req.params.customerId, (err, data) => {
+    Assignment.remove(req.params.assignmentId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found Assignment with id ${req.params.assignmentId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete Customer with id " + req.params.customerId
+                    message: "Could not delete Assignment with id " + req.params.assignmentId
                 });
             }
-        } else res.send({ message: `Customer was deleted successfully!` });
+        } else res.send({ message: `Assignment was deleted successfully!` });
     });
 };
 
-// Delete all Customers from the database.
+// Delete all Assignments from the database.
 exports.deleteAll = (req, res) => {
-    Customer.removeAll((err, data) => {
+    Assignment.removeAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all customers."
+                    err.message || "Some error occurred while removing all assignments."
             });
-        else res.send({ message: `All Customers were deleted successfully!` });
+        else res.send({ message: `All Assignments were deleted successfully!` });
     });
 };

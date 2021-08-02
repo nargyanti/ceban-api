@@ -1,27 +1,25 @@
 const sql = require("./db.js");
 
 // constructor
-const User = function(user) {
-    this.email = user.email;
-    this.name = user.name;
-    this.active = user.active;
+const ClassModel = function(classModel) {
+    this.class_name = classModel.class_name;
 };
 
-User.create = (newCustomer, result) => {
-    sql.query("INSERT INTO users SET ?", newCustomer, (err, res) => {
+ClassModel.create = (newClass, result) => {
+    sql.query("INSERT INTO classes SET ?", newClass, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
 
-        console.log("created user: ", { id: res.insertId, ...newCustomer });
-        result(null, { id: res.insertId, ...newCustomer });
+        console.log("created classModel: ", { id: res.insertId, ...newClass });
+        result(null, { id: res.insertId, ...newClass });
     });
 };
 
-User.findById = (customerId, result) => {
-    sql.query(`SELECT * FROM users WHERE id = ${customerId}`, (err, res) => {
+ClassModel.findById = (classId, result) => {
+    sql.query(`SELECT * FROM classes WHERE id = ${classId}`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -29,33 +27,33 @@ User.findById = (customerId, result) => {
         }
 
         if (res.length) {
-            console.log("found user: ", res[0]);
+            console.log("found classModel: ", res[0]);
             result(null, res[0]);
             return;
         }
 
-        // not found User with the id
+        // not found ClassModel with the id
         result({ kind: "not_found" }, null);
     });
 };
 
-User.getAll = result => {
-    sql.query("SELECT * FROM users", (err, res) => {
+ClassModel.getAll = result => {
+    sql.query("SELECT * FROM classes", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log("users: ", res);
+        console.log("classes: ", res);
         result(null, res);
     });
 };
 
-User.updateById = (id, user, result) => {
+ClassModel.updateById = (id, classModel, result) => {
     sql.query(
-        "UPDATE users SET email = ?, name = ?, active = ? WHERE id = ?",
-        [user.email, user.name, user.active, id],
+        "UPDATE classes SET class_name = ? WHERE id = ?",
+        [classModel.class_name, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -64,19 +62,19 @@ User.updateById = (id, user, result) => {
             }
 
             if (res.affectedRows == 0) {
-                // not found User with the id
+                // not found ClassModel with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("updated user: ", { id: id, ...user });
-            result(null, { id: id, ...user });
+            console.log("updated classModel: ", { id: id, ...classModel });
+            result(null, { id: id, ...classModel });
         }
     );
 };
 
-User.remove = (id, result) => {
-    sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+ClassModel.remove = (id, result) => {
+    sql.query("DELETE FROM classes WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -84,27 +82,27 @@ User.remove = (id, result) => {
         }
 
         if (res.affectedRows == 0) {
-            // not found User with the id
+            // not found ClassModel with the id
             result({ kind: "not_found" }, null);
             return;
         }
 
-        console.log("deleted user with id: ", id);
+        console.log("deleted classModel with id: ", id);
         result(null, res);
     });
 };
 
-User.removeAll = result => {
-    sql.query("DELETE FROM users", (err, res) => {
+ClassModel.removeAll = result => {
+    sql.query("DELETE FROM classes", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log(`deleted ${res.affectedRows} users`);
+        console.log(`deleted ${res.affectedRows} classes`);
         result(null, res);
     });
 };
 
-module.exports = User;
+module.exports = ClassModel;

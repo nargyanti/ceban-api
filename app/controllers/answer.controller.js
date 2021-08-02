@@ -1,6 +1,6 @@
-const Customer = require("../models/customer.model.js");
+const Answer = require("../models/answer.model.js");
 
-// Create and Save a new Customer
+// Create and Save a new Answer
 exports.create = (req, res) => {
     if (!req.body) {
         res.status(400).send({
@@ -8,27 +8,28 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a Customer
-    const customer = new Customer({
-        email: req.body.email,
-        name: req.body.name,
-        active: req.body.active
+    // Create a Answer
+    const answer = new Answer({
+        assignment_id: req.body.assignment_id,
+        student_id: req.body.student_id,
+        submit_datetime: req.body.submit_datetime,
+        score: req.body.score,
     });
 
-    // Save Customer in the database
-    Customer.create(customer, (err, data) => {
+    // Save Answer in the database
+    Answer.create(answer, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Customer."
+                    err.message || "Some error occurred while creating the Answer."
             });
         else res.send(data);
     });
 };
 
-// Retrieve all Customers from the database.
+// Retrieve all Answers from the database.
 exports.findAll = (req, res) => {
-    Customer.getAll((err, data) => {
+    Answer.getAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
@@ -38,24 +39,24 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Customer with a customerId
+// Find a single Answer with a answerId
 exports.findOne = (req, res) => {
-    Customer.findById(req.params.customerId, (err, data) => {
+    Answer.findById(req.params.answerId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found Answer with id ${req.params.answerId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving Customer with id " + req.params.customerId
+                    message: "Error retrieving Answer with id " + req.params.answerId
                 });
             }
         } else res.send(data);
     });
 };
 
-// Update a Customer identified by the customerId in the request
+// Update a Answer identified by the answerId in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -64,18 +65,18 @@ exports.update = (req, res) => {
         });
     }
 
-    Customer.updateById(
-        req.params.customerId,
-        new Customer(req.body),
+    Answer.updateById(
+        req.params.answerId,
+        new Answer(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
                     res.status(404).send({
-                        message: `Not found Customer with id ${req.params.customerId}.`
+                        message: `Not found Answer with id ${req.params.answerId}.`
                     });
                 } else {
                     res.status(500).send({
-                        message: "Error updating Customer with id " + req.params.customerId
+                        message: "Error updating Answer with id " + req.params.answerId
                     });
                 }
             } else res.send(data);
@@ -83,31 +84,31 @@ exports.update = (req, res) => {
     );
 };
 
-// Delete a Customer with the specified customerId in the request
+// Delete a Answer with the specified answerId in the request
 exports.delete = (req, res) => {
-    Customer.remove(req.params.customerId, (err, data) => {
+    Answer.remove(req.params.answerId, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found Customer with id ${req.params.customerId}.`
+                    message: `Not found Answer with id ${req.params.answerId}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Could not delete Customer with id " + req.params.customerId
+                    message: "Could not delete Answer with id " + req.params.answerId
                 });
             }
-        } else res.send({ message: `Customer was deleted successfully!` });
+        } else res.send({ message: `Answer was deleted successfully!` });
     });
 };
 
-// Delete all Customers from the database.
+// Delete all Answers from the database.
 exports.deleteAll = (req, res) => {
-    Customer.removeAll((err, data) => {
+    Answer.removeAll((err, data) => {
         if (err)
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while removing all customers."
             });
-        else res.send({ message: `All Customers were deleted successfully!` });
+        else res.send({ message: `All Answers were deleted successfully!` });
     });
 };

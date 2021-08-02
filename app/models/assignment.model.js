@@ -1,27 +1,28 @@
 const sql = require("./db.js");
 
 // constructor
-const User = function(user) {
-    this.email = user.email;
-    this.name = user.name;
-    this.active = user.active;
+const Assignment = function(assignment) {
+    this.subject_id = assignment.subject_id;
+    this.name = assignment.name;
+    this.question = assignment.question;
+    this.due_datetime = assignment.due_datetime;
 };
 
-User.create = (newCustomer, result) => {
-    sql.query("INSERT INTO users SET ?", newCustomer, (err, res) => {
+Assignment.create = (newAssignment, result) => {
+    sql.query("INSERT INTO assignments SET ?", newAssignment, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
 
-        console.log("created user: ", { id: res.insertId, ...newCustomer });
-        result(null, { id: res.insertId, ...newCustomer });
+        console.log("created assignment: ", { id: res.insertId, ...newAssignment });
+        result(null, { id: res.insertId, ...newAssignment });
     });
 };
 
-User.findById = (customerId, result) => {
-    sql.query(`SELECT * FROM users WHERE id = ${customerId}`, (err, res) => {
+Assignment.findById = (assignmentId, result) => {
+    sql.query(`SELECT * FROM assignments WHERE id = ${assignmentId}`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -29,33 +30,33 @@ User.findById = (customerId, result) => {
         }
 
         if (res.length) {
-            console.log("found user: ", res[0]);
+            console.log("found assignment: ", res[0]);
             result(null, res[0]);
             return;
         }
 
-        // not found User with the id
+        // not found Assignment with the id
         result({ kind: "not_found" }, null);
     });
 };
 
-User.getAll = result => {
-    sql.query("SELECT * FROM users", (err, res) => {
+Assignment.getAll = result => {
+    sql.query("SELECT * FROM assignments", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log("users: ", res);
+        console.log("assignments: ", res);
         result(null, res);
     });
 };
 
-User.updateById = (id, user, result) => {
+Assignment.updateById = (id, assignment, result) => {
     sql.query(
-        "UPDATE users SET email = ?, name = ?, active = ? WHERE id = ?",
-        [user.email, user.name, user.active, id],
+        "UPDATE assignments SET subject_id = ?, name = ?, question = ?, due_datetime = ? WHERE id = ?",
+        [assignment.subject_id, assignment.name, assignment.question, assignment.due_datetime, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -64,19 +65,19 @@ User.updateById = (id, user, result) => {
             }
 
             if (res.affectedRows == 0) {
-                // not found User with the id
+                // not found Assignment with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("updated user: ", { id: id, ...user });
-            result(null, { id: id, ...user });
+            console.log("updated assignment: ", { id: id, ...assignment });
+            result(null, { id: id, ...assignment });
         }
     );
 };
 
-User.remove = (id, result) => {
-    sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+Assignment.remove = (id, result) => {
+    sql.query("DELETE FROM assignments WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -84,27 +85,27 @@ User.remove = (id, result) => {
         }
 
         if (res.affectedRows == 0) {
-            // not found User with the id
+            // not found Assignment with the id
             result({ kind: "not_found" }, null);
             return;
         }
 
-        console.log("deleted user with id: ", id);
+        console.log("deleted assignment with id: ", id);
         result(null, res);
     });
 };
 
-User.removeAll = result => {
-    sql.query("DELETE FROM users", (err, res) => {
+Assignment.removeAll = result => {
+    sql.query("DELETE FROM assignments", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log(`deleted ${res.affectedRows} users`);
+        console.log(`deleted ${res.affectedRows} assignments`);
         result(null, res);
     });
 };
 
-module.exports = User;
+module.exports = Assignment;

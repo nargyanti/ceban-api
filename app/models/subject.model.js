@@ -1,27 +1,27 @@
 const sql = require("./db.js");
 
 // constructor
-const User = function(user) {
-    this.email = user.email;
-    this.name = user.name;
-    this.active = user.active;
+const Subject = function(subject) {
+    this.name = subject.name;
+    this.teacher_id = subject.teacher_id;
+    this.school_year = subject.school_year;
 };
 
-User.create = (newSubject, result) => {
-    sql.query("INSERT INTO users SET ?", newSubject, (err, res) => {
+Subject.create = (newSubjectDetail, result) => {
+    sql.query("INSERT INTO subjects SET ?", newSubjectDetail, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
 
-        console.log("created user: ", { id: res.insertId, ...newSubject });
-        result(null, { id: res.insertId, ...newSubject });
+        console.log("created subject: ", { id: res.insertId, ...newSubjectDetail });
+        result(null, { id: res.insertId, ...newSubjectDetail });
     });
 };
 
-User.findById = (subjectId, result) => {
-    sql.query(`SELECT * FROM users WHERE id = ${subjectId}`, (err, res) => {
+Subject.findById = (subjectId, result) => {
+    sql.query(`SELECT * FROM subjects WHERE id = ${subjectId}`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -29,33 +29,33 @@ User.findById = (subjectId, result) => {
         }
 
         if (res.length) {
-            console.log("found user: ", res[0]);
+            console.log("found subject: ", res[0]);
             result(null, res[0]);
             return;
         }
 
-        // not found User with the id
+        // not found Subject with the id
         result({ kind: "not_found" }, null);
     });
 };
 
-User.getAll = result => {
-    sql.query("SELECT * FROM users", (err, res) => {
+Subject.getAll = result => {
+    sql.query("SELECT * FROM subjects", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log("users: ", res);
+        console.log("subjects: ", res);
         result(null, res);
     });
 };
 
-User.updateById = (id, user, result) => {
+Subject.updateById = (id, subject, result) => {
     sql.query(
-        "UPDATE users SET email = ?, name = ?, active = ? WHERE id = ?",
-        [user.email, user.name, user.active, id],
+        "UPDATE subjects SET name = ?, teacher_id = ?, school_year = ? WHERE id = ?",
+        [subject.name, subject.teacher_id, subject.school_year, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -64,19 +64,19 @@ User.updateById = (id, user, result) => {
             }
 
             if (res.affectedRows == 0) {
-                // not found User with the id
+                // not found Subject with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("updated user: ", { id: id, ...user });
-            result(null, { id: id, ...user });
+            console.log("updated subject: ", { id: id, ...subject });
+            result(null, { id: id, ...subject });
         }
     );
 };
 
-User.remove = (id, result) => {
-    sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+Subject.remove = (id, result) => {
+    sql.query("DELETE FROM subjects WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -84,27 +84,27 @@ User.remove = (id, result) => {
         }
 
         if (res.affectedRows == 0) {
-            // not found User with the id
+            // not found Subject with the id
             result({ kind: "not_found" }, null);
             return;
         }
 
-        console.log("deleted user with id: ", id);
+        console.log("deleted subject with id: ", id);
         result(null, res);
     });
 };
 
-User.removeAll = result => {
-    sql.query("DELETE FROM users", (err, res) => {
+Subject.removeAll = result => {
+    sql.query("DELETE FROM subjects", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log(`deleted ${res.affectedRows} users`);
+        console.log(`deleted ${res.affectedRows} subjects`);
         result(null, res);
     });
 };
 
-module.exports = User;
+module.exports = Subject;
