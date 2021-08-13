@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require('path');
 
 const app = express();
 
@@ -10,7 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-    res.json({ message: "Welcome to CEBAN API." });
+    // res.json({ message: "Welcome to CEBAN API." });
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 require("./app/routes/user.routes.js")(app);
@@ -21,6 +23,6 @@ require("./app/routes/assignment.routes.js")(app);
 require("./app/routes/answer.routes.js")(app);
 
 // set port, listen for requests
-app.listen(5000, () => {
-    console.log("Server is running on port 5000.");
+app.listen(5001, () => {
+    console.log("Server is running on port 5001.");
 });

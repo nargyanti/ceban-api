@@ -1,4 +1,5 @@
 const User = require("../models/user.model.js");
+const md5 = require('md5');
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -13,7 +14,7 @@ exports.create = (req, res) => {
         name: req.body.name,
         username: req.body.username,
         telp: req.body.telp,
-        password: req.body.password,
+        password: md5(req.body.password),
         level: req.body.level,
         entry_year: req.body.entry_year
     });
