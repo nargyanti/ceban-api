@@ -56,6 +56,22 @@ exports.findOne = (req, res) => {
     });
 };
 
+exports.findAssignmentList = (req, res) => {
+    Assignment.findAssignmentList(req.params.subjectId, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found Assignment with subject_id ${req.params.subjectId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Assignment with subject_id " + req.params.subjectId
+                });
+            }
+        } else res.send(data);
+    });
+};
+
 // Update a Assignment identified by the assignmentId in the request
 exports.update = (req, res) => {
     // Validate Request

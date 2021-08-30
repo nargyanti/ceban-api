@@ -40,6 +40,25 @@ Assignment.findById = (assignmentId, result) => {
     });
 };
 
+Assignment.findAssignmentList = (subjectId, result) => {
+    sql.query(`SELECT * FROM assignments WHERE subject_id = ${subjectId}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found assignment: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found Assignment with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
 Assignment.getAll = result => {
     sql.query("SELECT * FROM assignments", (err, res) => {
         if (err) {

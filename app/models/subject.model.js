@@ -5,6 +5,7 @@ const Subject = function(subject) {
     this.name = subject.name;
     this.teacher_id = subject.teacher_id;
     this.school_year = subject.school_year;
+    this.class_id = subject.class_id;
 };
 
 Subject.create = (newSubjectDetail, result) => {
@@ -39,6 +40,25 @@ Subject.findById = (subjectId, result) => {
     });
 };
 
+Subject.findSubjectList = (classId, result) => {
+    sql.query(`SELECT * FROM subjects WHERE class_id = ${classId}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found subject: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found Subject with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
 Subject.getAll = result => {
     sql.query("SELECT * FROM subjects", (err, res) => {
         if (err) {
@@ -54,8 +74,8 @@ Subject.getAll = result => {
 
 Subject.updateById = (id, subject, result) => {
     sql.query(
-        "UPDATE subjects SET name = ?, teacher_id = ?, school_year = ? WHERE id = ?",
-        [subject.name, subject.teacher_id, subject.school_year, id],
+        "UPDATE subjects SET name = ?, teacher_id = ?, school_year = ?, class_id = ? WHERE id = ?",
+        [subject.name, subject.teacher_id, subject.school_year, subject.class_id, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);

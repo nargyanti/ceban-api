@@ -1,27 +1,27 @@
 const sql = require("./db.js");
 
 // constructor
-const User = function(user) {
-    this.email = user.email;
-    this.name = user.name;
-    this.active = user.active;
+const StudentClass = function(studentClass) {
+    this.student_id = studentClass.student_id;
+    this.class_id = studentClass.class_id;
+    this.roll_number = studentClass.roll_number;
 };
 
-User.create = (newCustomer, result) => {
-    sql.query("INSERT INTO users SET ?", newCustomer, (err, res) => {
+StudentClass.create = (newStudentClass, result) => {
+    sql.query("INSERT INTO student_classes SET ?", newStudentClass, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
 
-        console.log("created user: ", { id: res.insertId, ...newCustomer });
-        result(null, { id: res.insertId, ...newCustomer });
+        console.log("created studentClass: ", { id: res.insertId, ...newStudentClass });
+        result(null, { id: res.insertId, ...newStudentClass });
     });
 };
 
-User.findById = (customerId, result) => {
-    sql.query(`SELECT * FROM users WHERE id = ${customerId}`, (err, res) => {
+StudentClass.findById = (stId, result) => {
+    sql.query(`SELECT * FROM student_classes WHERE id = ${stId}`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -29,33 +29,52 @@ User.findById = (customerId, result) => {
         }
 
         if (res.length) {
-            console.log("found user: ", res[0]);
+            console.log("found studentClass: ", res[0]);
             result(null, res[0]);
             return;
         }
 
-        // not found User with the id
+        // not found StudentClass with the id
         result({ kind: "not_found" }, null);
     });
 };
 
-User.getAll = result => {
-    sql.query("SELECT * FROM users", (err, res) => {
+StudentClass.getAll = result => {
+    sql.query("SELECT * FROM student_classes", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log("users: ", res);
+        console.log("student_classes: ", res);
         result(null, res);
     });
 };
 
-User.updateById = (id, user, result) => {
+StudentClass.findStudentList = (classId, result) => {
+    sql.query(`SELECT u.id, u.name, u.entry_year, sc.roll_number, c.class_name FROM users as u INNER JOIN student_classes as sc ON u.id = sc.student_id INNER JOIN classes as c ON c.id = sc.class_id WHERE sc.class_id = ${classId}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found subject: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found Subject with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
+StudentClass.updateById = (id, studentClass, result) => {
     sql.query(
-        "UPDATE users SET email = ?, name = ?, active = ? WHERE id = ?",
-        [user.email, user.name, user.active, id],
+        "UPDATE student_classes SET class_id = ?, student_id = ?, roll_number = ? WHERE id = ?",
+        [studentClass.class_id, studentClass.student_name, studentClass.roll_number, id],
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -64,19 +83,19 @@ User.updateById = (id, user, result) => {
             }
 
             if (res.affectedRows == 0) {
-                // not found User with the id
+                // not found StudentClass with the id
                 result({ kind: "not_found" }, null);
                 return;
             }
 
-            console.log("updated user: ", { id: id, ...user });
-            result(null, { id: id, ...user });
+            console.log("updated studentClass: ", { id: id, ...studentClass });
+            result(null, { id: id, ...studentClass });
         }
     );
 };
 
-User.remove = (id, result) => {
-    sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+StudentClass.remove = (id, result) => {
+    sql.query("DELETE FROM student_classes WHERE id = ?", id, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -84,27 +103,27 @@ User.remove = (id, result) => {
         }
 
         if (res.affectedRows == 0) {
-            // not found User with the id
+            // not found StudentClass with the id
             result({ kind: "not_found" }, null);
             return;
         }
 
-        console.log("deleted user with id: ", id);
+        console.log("deleted studentClass with id: ", id);
         result(null, res);
     });
 };
 
-User.removeAll = result => {
-    sql.query("DELETE FROM users", (err, res) => {
+StudentClass.removeAll = result => {
+    sql.query("DELETE FROM student_classes", (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);
             return;
         }
 
-        console.log(`deleted ${res.affectedRows} users`);
+        console.log(`deleted ${res.affectedRows} student_classes`);
         result(null, res);
     });
 };
 
-module.exports = User;
+module.exports = StudentClass;

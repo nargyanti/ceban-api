@@ -13,7 +13,8 @@ exports.create = (req, res) => {
     const subject = new Subject({
         name: req.body.name,
         teacher_id: req.body.teacher_id,
-        school_year: req.body.school_year
+        school_year: req.body.school_year,
+        class_id: req.body.class_id
     });
 
     // Save Subject in the database
@@ -50,6 +51,22 @@ exports.findOne = (req, res) => {
             } else {
                 res.status(500).send({
                     message: "Error retrieving Subject with id " + req.params.subjectId
+                });
+            }
+        } else res.send(data);
+    });
+};
+
+exports.findSubjectList = (req, res) => {
+    Subject.findSubjectList(req.params.classId, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found Subject with class_id ${req.params.classId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Subject with class_id " + req.params.classId
                 });
             }
         } else res.send(data);

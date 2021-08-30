@@ -1,5 +1,6 @@
 module.exports = app => {
     const subjects = require("../controllers/subject.controller.js");
+    const assignments = require("../controllers/assignment.controller.js");
 
     // Create a new Subject
     app.post("/subjects", subjects.create);
@@ -9,6 +10,9 @@ module.exports = app => {
 
     // Retrieve a single Subject with subjectId
     app.get("/subjects/:subjectId", subjects.findOne);
+
+    // Retrieve a assignment based on Subject
+    app.get("/subjects/:subjectId/assignments", assignments.findAssignmentList);
 
     // Update a Subject with subjectId
     app.put("/subjects/:subjectId", subjects.update);

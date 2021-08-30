@@ -18,8 +18,8 @@ app.get("/", (req, res) => {
 require("./app/routes/user.routes.js")(app);
 require("./app/routes/class.routes.js")(app);
 require("./app/routes/subject.routes.js")(app);
-require("./app/routes/subject_detail.routes.js")(app);
 require("./app/routes/assignment.routes.js")(app);
+require("./app/routes/student_class.routes.js")(app);
 require("./app/routes/answer.routes.js")(app);
 
 // set port, listen for requests
