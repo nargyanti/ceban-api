@@ -115,3 +115,42 @@ exports.deleteAll = (req, res) => {
         else res.send({ message: `All Users were deleted successfully!` });
     });
 };
+
+exports.login = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
+
+    // Save User in the database
+    User.login(req.body.username, md5(req.body.password), (err, data) => {
+        if (res.length > 0) {
+            req.session.loggedin = true;
+            req.session.username = req.body.username;
+        }
+
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "You can't login"
+            });
+        else res.send(data);
+    });
+};
+
+exports.findOne = (req, res) => {
+    User.findById(req.params.userId, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found User with id ${req.params.userId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: `Error retrieving User with id ${req.params.userId}`
+                });
+            }
+        } else res.send(data);
+    });
+};

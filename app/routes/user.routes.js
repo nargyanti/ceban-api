@@ -18,4 +18,7 @@ module.exports = app => {
 
     // Create a new User
     app.delete("/users", users.deleteAll);
+
+    // Login
+    app.post("/login", users.login);
 };
