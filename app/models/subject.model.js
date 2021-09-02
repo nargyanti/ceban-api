@@ -127,4 +127,23 @@ Subject.removeAll = result => {
     });
 };
 
+Subject.findSubjectByTeacher = (teacherId, result) => {
+    sql.query(`SELECT s.id, s.teacher_id, s.class_id, s.school_year FROM subjects as s INNER JOIN users as u ON u.id = s.teacher_id WHERE s.teacher_id = ${teacherId}`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found subject: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found Subject with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
 module.exports = Subject;

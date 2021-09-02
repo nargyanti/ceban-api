@@ -1,7 +1,14 @@
 const express = require("express");
 const path = require('path');
+const session = require('express-session');
 
 const app = express();
+
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
 
 // parse requests of content-type: application/json
 app.use(express.json());

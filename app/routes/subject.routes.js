@@ -22,4 +22,7 @@ module.exports = app => {
 
     // Create a new Subject
     app.delete("/subjects", subjects.deleteAll);
+
+    // Get subject list by teacher     
+    app.get("/teacher/:teacherId/subjects", subjects.findSubjectByTeacher);
 };

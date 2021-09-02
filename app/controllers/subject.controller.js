@@ -129,3 +129,19 @@ exports.deleteAll = (req, res) => {
         else res.send({ message: `All Subjects were deleted successfully!` });
     });
 };
+
+exports.findSubjectByTeacher = (req, res) => {
+    Subject.findSubjectByTeacher(req.params.teacherId, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found Subject with teacher_id ${req.params.teacherId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Subject with teacher_id " + req.params.teacherId
+                });
+            }
+        } else res.send(data);
+    });
+};
