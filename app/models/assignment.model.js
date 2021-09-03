@@ -129,7 +129,8 @@ Assignment.removeAll = result => {
 
 Assignment.getStudentById = (assignmentId, result) => {
     sql.query(`
-    SELECT u.name, a2.score FROM users as u
+    SELECT u.name, COALESCE(a2.score, 0) as score
+FROM users as u
 INNER JOIN subject_details sd on u.id = sd.student_id
 INNER JOIN assignments a on sd.subject_id = a.subject_id
 LEFT JOIN answers a2 on a.id = a2.assignment_id
