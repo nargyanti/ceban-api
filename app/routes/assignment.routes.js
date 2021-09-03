@@ -10,6 +10,9 @@ module.exports = app => {
     // Retrieve a single Assignment with assignmentId
     app.get("/assignments/:assignmentId", assignments.findOne);
 
+    // Retrieve a single Assignment with assignmentId
+    app.get("/assignments/:assignmentId/students", assignments.getStudentById);
+
     // Update a Assignment with assignmentId
     app.put("/assignments/:assignmentId", assignments.update);
 

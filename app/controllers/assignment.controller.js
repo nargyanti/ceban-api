@@ -128,3 +128,19 @@ exports.deleteAll = (req, res) => {
         else res.send({ message: `All Assignments were deleted successfully!` });
     });
 };
+
+exports.getStudentById = (req, res) => {
+    Assignment.getStudentById(req.params.assignmentId, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found Assignment with id ${req.params.assignmentId}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving Assignment with id " + req.params.assignmentId
+                });
+            }
+        } else res.send(data);
+    }) 
+}

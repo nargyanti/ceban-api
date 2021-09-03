@@ -17,5 +17,7 @@
     "nodemon": "^2.0.12",
     "sequelize": "^6.6.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
 }

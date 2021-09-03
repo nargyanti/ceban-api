@@ -10,6 +10,9 @@ module.exports = app => {
     // Retrieve a single User with userId
     app.get("/users/:userId", users.findOne);
 
+    // Retrieve a single User subjects with userId
+    app.get("/users/:userId/subjects", users.findSubjectByStudentId);
+
     // Update a User with userId
     app.put("/users/:userId", users.update);
 

@@ -7,7 +7,7 @@
 
 module.exports = {
     HOST: "localhost",
-    USER: "root",
-    PASSWORD: "",
-    DB: "ceban-api"
+    USER: "admin",
+    PASSWORD: "Aremania87",
+    DB: "ceban_api"
 };

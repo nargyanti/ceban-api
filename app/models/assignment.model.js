@@ -127,4 +127,22 @@ Assignment.removeAll = result => {
     });
 };
 
+Assignment.getStudentById = (assignmentId, result) => {
+    sql.query(`
+    SELECT u.name, a2.score FROM users as u
+INNER JOIN subject_details sd on u.id = sd.student_id
+INNER JOIN assignments a on sd.subject_id = a.subject_id
+LEFT JOIN answers a2 on a.id = a2.assignment_id
+WHERE a.id = ${assignmentId}
+    `, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        result(null, res);
+    })
+}
+
 module.exports = Assignment;
