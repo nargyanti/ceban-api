@@ -127,23 +127,60 @@ Subject.removeAll = result => {
     });
 };
 
-Subject.findSubjectByTeacher = (teacherId, result) => {
-    sql.query(`SELECT s.id, s.teacher_id, s.class_id, s.school_year FROM subjects as s INNER JOIN users as u ON u.id = s.teacher_id WHERE s.teacher_id = ${teacherId}`, (err, res) => {
+Subject.getByStudentId = (studentId, result) => {
+    sql.query(
+      `SELECT sd.id,
+      sd.subject_id,
+      s.name,
+      s.teacher_id,
+      s.school_year,
+      u.name      as teacher_name,
+      count(distinct a.id) as assignment_count,
+       count(distinct sd.id) as student_count
+FROM subjects as s
+        INNER JOIN subject_details as sd ON s.id = sd.subject_id
+        INNER JOIN users as u ON u.id = s.teacher_id
+        LEFT JOIN assignments a on s.id = a.subject_id
+WHERE sd.student_id = ${studentId}
+GROUP BY s.id;`,
+      (err, res) => {
         if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
+          console.log("error: ", err);
+          result(null, err);
+          return;
         }
-
-        if (res.length) {
-            console.log("found subject: ", res[0]);
-            result(null, res[0]);
-            return;
+  
+        result(null, res);
+      }
+    );
+  };
+  
+  Subject.getByTeacherId = (teacherId, result) => {
+    sql.query(
+      `SELECT sd.id,
+      sd.subject_id,
+      s.name,
+      s.teacher_id,
+      s.school_year,
+      u.name      as teacher_name,
+      count(distinct a.id) as assignment_count,
+       count(distinct sd.id) as student_count
+FROM subjects as s
+        INNER JOIN users u on s.teacher_id = u.id
+        LEFT JOIN subject_details sd on s.id = sd.subject_id
+        LEFT JOIN assignments a on s.id = a.subject_id
+WHERE s.teacher_id = ${teacherId}
+GROUP BY s.id;`,
+      (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
         }
-
-        // not found Subject with the id
-        result({ kind: "not_found" }, null);
-    });
-};
+  
+        result(null, res);
+      }
+    );
+  };
 
 module.exports = Subject;

@@ -143,31 +143,4 @@ User.removeAll = (result) => {
   });
 };
 
-User.getByStudentId = (studentId, result) => {
-  sql.query(
-    `SELECT sd.id,
-    sd.subject_id,
-    s.name,
-    s.teacher_id,
-    s.school_year,
-    u.name as teacher_name,
-    count(a.id) as assignment_count
-FROM subjects as s
-     INNER JOIN subject_details as sd ON s.id = sd.subject_id
-     INNER JOIN users as u ON u.id = s.teacher_id
-     LEFT JOIN assignments a on s.id = a.subject_id
-WHERE sd.student_id = ${studentId}
-GROUP BY s.id`,
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-
-      result(null, res);
-    }
-  );
-};
-
 module.exports = User;

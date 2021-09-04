@@ -1,5 +1,6 @@
 const User = require("../models/user.model.js");
 const md5 = require('md5');
+const Subject = require("../models/subject.model.js");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -156,17 +157,33 @@ exports.findOne = (req, res) => {
 };
 
 exports.findSubjectByStudentId = (req, res) => {
-    User.getByStudentId(req.params.userId, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found User with id ${req.params.userId}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: `Error retrieving User with id ${req.params.userId}`
-                });
-            }
-        } else res.send(data);
-    })
+    if(req.query.level == "Student") {
+        Subject.getByStudentId(req.params.userId, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found User with id ${req.params.userId}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: `Error retrieving User with id ${req.params.userId}`
+                    });
+                }
+            } else res.send(data);
+        })
+    }else if(req.query.level == "Teacher") {
+        Subject.getByTeacherId(req.params.userId, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found User with id ${req.params.userId}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: `Error retrieving User with id ${req.params.userId}`
+                    });
+                }
+            } else res.send(data);
+        })
+    }   
 }
