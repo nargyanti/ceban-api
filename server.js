@@ -1,8 +1,15 @@
 const express = require("express");
 const path = require('path');
 const session = require('express-session');
+var cors = require('cors');
 
 const app = express();
+app.use(cors());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 
 app.use(session({
     secret: 'secret',
@@ -19,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // simple route
 app.get("/", (req, res) => {
     // res.json({ message: "Welcome to CEBAN API." });
+    // eslint-disable-next-line no-undef
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
