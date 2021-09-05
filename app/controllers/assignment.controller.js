@@ -144,3 +144,35 @@ exports.getStudentById = (req, res) => {
         } else res.send(data);
     }) 
 }
+
+exports.getBySubjectId = (req, res) => {
+    if(req.query.level == "Teacher") {
+        Assignment.getBySubject(req.params.subjectId, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found Assignment with id ${req.params.assignmentId}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: "Error retrieving Assignment with id " + req.params.assignmentId
+                    });
+                }
+            } else res.send(data);
+        })
+    }else{
+        Assignment.getBySubjectAndStudent(req.params.subjectId, req.query.studentId, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found Assignment with id ${req.params.assignmentId}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: "Error retrieving Assignment with id " + req.params.assignmentId
+                    });
+                }
+            } else res.send(data);
+        })
+    }
+}

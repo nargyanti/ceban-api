@@ -12,7 +12,7 @@ module.exports = app => {
     app.get("/subjects/:subjectId", subjects.findOne);
 
     // Retrieve a assignment based on Subject
-    app.get("/subjects/:subjectId/assignments", assignments.findAssignmentList);
+    app.get("/subjects/:subjectId/assignments", assignments.getBySubjectId);
 
     // Update a Subject with subjectId
     app.put("/subjects/:subjectId", subjects.update);
@@ -23,6 +23,6 @@ module.exports = app => {
     // Create a new Subject
     app.delete("/subjects", subjects.deleteAll);
 
-    // Get subject list by teacher     
+    // Get subject list by teacher
     app.get("/teacher/:teacherId/subjects", subjects.findSubjectByTeacher);
 };

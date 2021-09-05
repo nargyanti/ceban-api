@@ -49,8 +49,8 @@ Assignment.findAssignmentList = (subjectId, result) => {
         }
 
         if (res.length) {
-            console.log("found assignment: ", res[0]);
-            result(null, res[0]);
+            console.log("found assignment: ", res);
+            result(null, res);
             return;
         }
 
@@ -145,5 +145,44 @@ WHERE a.id = ${assignmentId}
         result(null, res);
     })
 }
+
+Assignment.getBySubjectAndStudent = (subjectId, studentId, result) => {
+    sql.query(`
+    SELECT a.id, a.name, a.question, a.due_datetime,
+        count(a2.id) as answer_count
+FROM assignments a
+LEFT JOIN answers a2 on a.id = a2.assignment_id
+WHERE subject_id = ${subjectId} AND (a2.student_id = ${studentId} OR a2.student_id IS NULL)
+GROUP BY a.id;
+    `, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        result(null, res);
+    })
+}
+
+Assignment.getBySubject = (subjectId, result) => {
+    sql.query(`
+    SELECT a.id, a.name, a.question, a.due_datetime,
+        count(a2.id) as answer_count
+FROM assignments a
+LEFT JOIN answers a2 on a.id = a2.assignment_id
+WHERE subject_id = ${subjectId}
+GROUP BY a.id;
+    `, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        result(null, res);
+    })
+}
+
 
 module.exports = Assignment;
