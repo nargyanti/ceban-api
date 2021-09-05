@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const Assignment = function(assignment) {
+const Assignment = function (assignment) {
     this.subject_id = assignment.subject_id;
     this.name = assignment.name;
     this.question = assignment.question;
@@ -129,12 +129,12 @@ Assignment.removeAll = result => {
 
 Assignment.getStudentById = (assignmentId, result) => {
     sql.query(`
-    SELECT u.name, COALESCE(a2.score, 0) as score
-FROM users as u
-INNER JOIN subject_details sd on u.id = sd.student_id
-INNER JOIN assignments a on sd.subject_id = a.subject_id
-LEFT JOIN answers a2 on a.id = a2.assignment_id
-WHERE a.id = ${assignmentId}
+    SELECT u.id as user_id, u.name, a.id as answer_id, a.score FROM assignments
+    INNER JOIN subjects s on assignments.subject_id = s.id
+    INNER JOIN subject_details sd on s.id = sd.subject_id
+    INNER JOIN users u on sd.student_id = u.id
+    LEFT JOIN answers a on assignments.id = a.assignment_id AND a.student_id = u.id
+    WHERE assignments.id = ${assignmentId};
     `, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -149,11 +149,11 @@ WHERE a.id = ${assignmentId}
 Assignment.getBySubjectAndStudent = (subjectId, studentId, result) => {
     sql.query(`
     SELECT a.id, a.name, a.question, a.due_datetime,
-        count(a2.id) as answer_count
-FROM assignments a
-LEFT JOIN answers a2 on a.id = a2.assignment_id
-WHERE subject_id = ${subjectId} AND (a2.student_id = ${studentId} OR a2.student_id IS NULL)
-GROUP BY a.id;
+            count(a2.id) as answer_count
+    FROM assignments a
+    LEFT JOIN answers a2 on a.id = a2.assignment_id
+    WHERE subject_id = ${subjectId} AND (a2.student_id = ${studentId} OR a2.student_id IS NULL)
+    GROUP BY a.id;
     `, (err, res) => {
         if (err) {
             console.log("error: ", err);
