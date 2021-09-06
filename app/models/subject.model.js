@@ -49,8 +49,8 @@ Subject.findSubjectList = (classId, result) => {
         }
 
         if (res.length) {
-            console.log("found subject: ", res[0]);
-            result(null, res[0]);
+            console.log("subjects: ", res);
+            result(null, res);
             return;
         }
 
@@ -129,7 +129,7 @@ Subject.removeAll = result => {
 
 Subject.getByStudentId = (studentId, result) => {
     sql.query(
-      `SELECT sd.id,
+        `SELECT sd.id,
       sd.subject_id,
       s.name,
       s.teacher_id,
@@ -143,21 +143,21 @@ FROM subjects as s
         LEFT JOIN assignments a on s.id = a.subject_id
 WHERE sd.student_id = ${studentId}
 GROUP BY s.id;`,
-      (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(null, err);
-          return;
+        (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(null, err);
+                return;
+            }
+
+            result(null, res);
         }
-  
-        result(null, res);
-      }
     );
-  };
-  
-  Subject.getByTeacherId = (teacherId, result) => {
+};
+
+Subject.getByTeacherId = (teacherId, result) => {
     sql.query(
-      `SELECT sd.id,
+        `SELECT sd.id,
       sd.subject_id,
       s.name,
       s.teacher_id,
@@ -171,16 +171,16 @@ FROM subjects as s
         LEFT JOIN assignments a on s.id = a.subject_id
 WHERE s.teacher_id = ${teacherId}
 GROUP BY s.id;`,
-      (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(null, err);
-          return;
+        (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(null, err);
+                return;
+            }
+
+            result(null, res);
         }
-  
-        result(null, res);
-      }
     );
-  };
+};
 
 module.exports = Subject;

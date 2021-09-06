@@ -5,9 +5,16 @@
 //     DB: "u1437717_ceban_api"
 // };
 
+// module.exports = {
+//     HOST: "localhost",
+//     USER: "admin",
+//     PASSWORD: "Aremania87",
+//     DB: "ceban_api"
+// };
+
 module.exports = {
     HOST: "localhost",
-    USER: "admin",
-    PASSWORD: "Aremania87",
-    DB: "ceban_api"
+    USER: "root",
+    PASSWORD: "",
+    DB: "ceban-api"
 };

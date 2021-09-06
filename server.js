@@ -36,6 +36,7 @@ require("./app/routes/subject.routes.js")(app);
 require("./app/routes/assignment.routes.js")(app);
 require("./app/routes/student_class.routes.js")(app);
 require("./app/routes/answer.routes.js")(app);
+require("./app/routes/answer_picture.routes.js")(app);
 
 // set port, listen for requests
 app.listen(5001, () => {

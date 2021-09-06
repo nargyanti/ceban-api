@@ -61,9 +61,8 @@ StudentClass.findStudentList = (classId, result) => {
         }
 
         if (res.length) {
-            console.log("found subject: ", res[0]);
-            result(null, res[0]);
-            return;
+            console.log("students: ", res);
+            result(null, res);
         }
 
         // not found Subject with the id

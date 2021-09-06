@@ -1,5 +1,6 @@
 module.exports = app => {
     const answers = require("../controllers/answer.controller.js");
+    const answer_pictures = require("../controllers/answer_picture.controller.js");
 
     // Create a new Answer
     app.post("/answers", answers.create);
@@ -18,4 +19,7 @@ module.exports = app => {
 
     // Create a new Answer
     app.delete("/answers", answers.deleteAll);
+
+    // Retrieve a list of picture of answer with answerPictureId
+    app.get("/answers/:answerId/detail", answer_pictures.getAnswerDetail);
 };
