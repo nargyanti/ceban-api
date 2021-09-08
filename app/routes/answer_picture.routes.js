@@ -37,6 +37,8 @@ module.exports = app => {
     // Retrieve a single AnswerPicture with answerPictureId
     app.get("/answer_pictures/:answerPictureId", answer_pictures.findOne);
 
+    app.get("/download", answer_pictures.download);
+
     // Update a AnswerPicture with answerPictureId
     // app.put("/answer_pictures/:answerPictureId", upload, answer_pictures.update);
 

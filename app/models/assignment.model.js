@@ -148,8 +148,7 @@ Assignment.getStudentById = (assignmentId, result) => {
 
 Assignment.getBySubjectAndStudent = (subjectId, studentId, result) => {
     sql.query(`
-    SELECT a.id, a.name, a.question, a.due_datetime,
-            count(a2.id) as answer_count
+    SELECT a.id, a.name, a.question, a.due_datetime, COALESCE(a2.id, 0) as answer_count
     FROM assignments a
     LEFT JOIN answers a2 on a.id = a2.assignment_id
     WHERE subject_id = ${subjectId} AND (a2.student_id = ${studentId} OR a2.student_id IS NULL)

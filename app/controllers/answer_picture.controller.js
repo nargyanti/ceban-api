@@ -136,3 +136,8 @@ exports.deleteAll = (req, res) => {
         else res.send({ message: `All Answers were deleted successfully!` });
     });
 };
+
+exports.download = (req, res) => {
+    var filePath = `public/uploads/${req.query.filename}`;
+    res.download(filePath)
+}
