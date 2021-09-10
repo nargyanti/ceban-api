@@ -129,20 +129,22 @@ Subject.removeAll = result => {
 
 Subject.getByStudentId = (studentId, result) => {
     sql.query(
-        `SELECT sd.id,
-      sd.subject_id,
-      s.name,
-      s.teacher_id,
-      s.school_year,
-      u.name      as teacher_name,
-      count(distinct a.id) as assignment_count,
-       count(distinct sd.id) as student_count
-FROM subjects as s
-        INNER JOIN subject_details as sd ON s.id = sd.subject_id
+        `SELECT s.id,
+        s.name,
+        s.teacher_id,
+        s.school_year,
+        c.id
+        c.class_name,
+        u.name as teacher_name,
+        count(distinct a.id) as assignment_count,
+        count(distinct sc.student_id)as student_count
+        FROM subjects as s
         INNER JOIN users as u ON u.id = s.teacher_id
+        INNER JOIN classes as c ON c.id = s.class_id
+        INNER JOIN student_classes as sc ON sc.class_id = c.id
         LEFT JOIN assignments a on s.id = a.subject_id
-WHERE sd.student_id = ${studentId}
-GROUP BY s.id;`,
+        WHERE sc.student_id = ${studentId}
+        GROUP BY s.id;`,
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -157,20 +159,22 @@ GROUP BY s.id;`,
 
 Subject.getByTeacherId = (teacherId, result) => {
     sql.query(
-        `SELECT sd.id,
-      sd.subject_id,
-      s.name,
-      s.teacher_id,
-      s.school_year,
-      u.name      as teacher_name,
-      count(distinct a.id) as assignment_count,
-       count(distinct sd.id) as student_count
-FROM subjects as s
-        INNER JOIN users u on s.teacher_id = u.id
-        LEFT JOIN subject_details sd on s.id = sd.subject_id
+        `SELECT s.id,
+        s.name,
+        s.teacher_id,
+        s.school_year,
+        c.id
+        c.class_name,
+        u.name as teacher_name,
+        count(distinct a.id) as assignment_count,
+        count(distinct sc.student_id)as student_count
+        FROM subjects as s
+        INNER JOIN users as u ON u.id = s.teacher_id
+        INNER JOIN classes as c ON c.id = s.class_id
+        INNER JOIN student_classes as sc ON sc.class_id = c.id
         LEFT JOIN assignments a on s.id = a.subject_id
-WHERE s.teacher_id = ${teacherId}
-GROUP BY s.id;`,
+        WHERE s.teacher = ${teacherId}
+        GROUP BY s.id;`,
         (err, res) => {
             if (err) {
                 console.log("error: ", err);
