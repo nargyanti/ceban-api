@@ -129,11 +129,11 @@ Assignment.removeAll = result => {
 
 Assignment.getStudentById = (assignmentId, result) => {
     sql.query(`
-    SELECT a.id as assignment_id, a.subject_id, u.name, sc.student_id, s.class_id, an.id as answer_id, an.score FROM assignments a
+    SELECT u.id as user_id, u.name, an.id as answer_id, an.score FROM assignments a
     INNER JOIN subjects s on a.subject_id = s.id
-    INNER JOIN student_classes sc on sc.class_id = s.class_id
-    INNER JOIN answers an on an.student_id = sc.student_id
-    INNER JOIN users u on u.id = sc.student_id
+    INNER JOIN student_classes sc on s.class_id = sc.class_id
+    INNER JOIN users u on sc.student_id = u.id
+    LEFT JOIN answers an on a.id = an.assignment_id AND an.student_id = u.id
     WHERE a.id = ${assignmentId};
     `, (err, res) => {
         if (err) {
