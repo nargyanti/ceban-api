@@ -1,7 +1,8 @@
 const AnswerPicture = require("../models/answer_picture.model.js");
+const { createWorker } = require('tesseract.js');
 
 // Create and Save a new AnswerPicture
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
@@ -17,15 +18,17 @@ exports.create = (req, res) => {
         });
     }
 
+    const convert_text = await getTextFromImage(req.file.filename);
+
     // Create a AnswerPicture
-    const answer_picture = new AnswerPicture({
+    const answer_picture = await new AnswerPicture({
         answer_id: req.body.answer_id,
         path: req.file.filename,
-        convert_result: "Anggap ini hasil convert pake Tesseract.js",
+        convert_result: convert_text,
     });
 
     // Save AnswerPicture in the database
-    AnswerPicture.create(answer_picture, (err, data) => {
+    await AnswerPicture.create(answer_picture, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
@@ -140,4 +143,16 @@ exports.deleteAll = (req, res) => {
 exports.download = (req, res) => {
     var filePath = `public/uploads/${req.query.filename}`;
     res.download(filePath)
+}
+
+async function getTextFromImage(filename) {
+    const worker = createWorker();
+    await worker.load()
+    await worker.loadLanguage('ind')
+    await worker.initialize('ind')
+    const { data: { text } } = await worker.recognize(`public/uploads/${filename}`);
+    await worker.terminate()
+    console.log(text);
+
+    return text
 }

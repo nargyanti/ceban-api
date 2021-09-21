@@ -32,7 +32,7 @@ module.exports = app => {
     app.post("/answer_pictures", upload, answer_pictures.create);
 
     // Retrieve all answer_pictures
-    // app.get("/answer_pictures", answer_pictures.findAll);
+    app.get("/answer_pictures", answer_pictures.findAll);
 
     // Retrieve a single AnswerPicture with answerPictureId
     app.get("/answer_pictures/:answerPictureId", answer_pictures.findOne);

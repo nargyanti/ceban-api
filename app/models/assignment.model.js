@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const Assignment = function (assignment) {
+const Assignment = function(assignment) {
     this.subject_id = assignment.subject_id;
     this.name = assignment.name;
     this.question = assignment.question;
@@ -129,12 +129,12 @@ Assignment.removeAll = result => {
 
 Assignment.getStudentById = (assignmentId, result) => {
     sql.query(`
-    SELECT u.id as user_id, u.name, a.id as answer_id, a.score FROM assignments
-    INNER JOIN subjects s on assignments.subject_id = s.id
-    INNER JOIN subject_details sd on s.id = sd.subject_id
-    INNER JOIN users u on sd.student_id = u.id
-    LEFT JOIN answers a on assignments.id = a.assignment_id AND a.student_id = u.id
-    WHERE assignments.id = ${assignmentId};
+    SELECT a.id as assignment_id, a.subject_id, u.name, sc.student_id, s.class_id, an.id as answer_id, an.score FROM assignments a
+    INNER JOIN subjects s on a.subject_id = s.id
+    INNER JOIN student_classes sc on sc.class_id = s.class_id
+    INNER JOIN answers an on an.student_id = sc.student_id
+    INNER JOIN users u on u.id = sc.student_id
+    WHERE a.id = ${assignmentId};
     `, (err, res) => {
         if (err) {
             console.log("error: ", err);
