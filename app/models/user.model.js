@@ -80,6 +80,20 @@ User.getAll = (result) => {
     });
 };
 
+User.getAccountByLevel = (level, result) => {
+    sql.query(`SELECT * FROM users WHERE level = "${level}"`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("users: ", res);
+        result(null, res);
+    });
+};
+
+
 User.updateById = (id, user, result) => {
     sql.query(
         "UPDATE users SET name = ?, username = ?, telp = ?, password = ?, level = ?, entry_year = ? WHERE id = ?",

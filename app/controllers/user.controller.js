@@ -33,14 +33,31 @@ exports.create = (req, res) => {
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-    User.getAll((err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving users."
-            });
-        else res.send(data);
-    });
+    console.log(req.query.level);
+    if (req.query.level == "Teacher" || req.query.level == "Student") {
+        User.getAccountByLevel(req.query.level, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found User with level ${req.query.level}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: `Error retrieving User with level ${req.query.level}`
+                    });
+                }
+            } else res.send(data);
+        })
+    } else {
+        User.getAll((err, data) => {
+            if (err)
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving users."
+                });
+            else res.send(data);
+        });
+    }
 };
 
 // Find a single User with a userId
@@ -157,7 +174,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.findSubjectByStudentId = (req, res) => {
-    if(req.query.level == "Student") {
+    if (req.query.level == "Student") {
         Subject.getByStudentId(req.params.userId, (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
@@ -171,7 +188,7 @@ exports.findSubjectByStudentId = (req, res) => {
                 }
             } else res.send(data);
         })
-    }else if(req.query.level == "Teacher") {
+    } else if (req.query.level == "Teacher") {
         Subject.getByTeacherId(req.params.userId, (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
@@ -185,5 +202,5 @@ exports.findSubjectByStudentId = (req, res) => {
                 }
             } else res.send(data);
         })
-    }   
+    }
 }
